@@ -3,7 +3,8 @@
 
 ##### 本项目为使用demo。使用方法：
 #### 1.clone后引入httplibrary为module。
-#### 2.在自定义Application调用ApiManager.initApiManger(this, BASE_URL);初始化。
+#### 2.在自定义Application初始化。
+    ApiManager.initApiManger(this, BASE_URL);
 #### 3.get请求示例：
     ApiManager.getInstance()
         .requestGet(MainActivity.this, API_REQUEST_PATH, Object.class, p, new SubscriberListener<Object>() {
