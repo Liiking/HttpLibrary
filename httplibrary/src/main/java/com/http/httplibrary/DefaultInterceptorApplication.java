@@ -65,7 +65,7 @@ public class DefaultInterceptorApplication extends DefaultInterceptorNetwork {
         return builder.body(ResponseBody.create(response.body().contentType(), content)).build();
     }
 
-    public Response getNullResponse(Request request) {
+    private Response getNullResponse(Request request) {
         Response.Builder builder = new Response.Builder();
         builder.request(request);
         builder.protocol(Protocol.HTTP_1_1);

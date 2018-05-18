@@ -43,8 +43,8 @@ public class ApiManager {
     private static ApiManager apiManager = null;
     private static IAPINetService apiNetService = null;
 
-    public static long READ_TIME = 30; // 读取时间超时 秒级别
-    public static long CONNECT_TIME = 10; // 连接时间超时 秒级别
+    private static long READ_TIME = 30; // 读取时间超时 秒级别
+    private static long CONNECT_TIME = 10; // 连接时间超时 秒级别
 
     private ApiManager(Context mContext, String baseUrl) {
         apiNetService = createServiceAPI(mContext, baseUrl, RxJavaCallAdapterFactory.create(), IAPINetService.class, null, null, null);
@@ -74,15 +74,15 @@ public class ApiManager {
         request(context, hideLoading, hideMsg, path, false, tClass, params, listener);
     }
 
-    public <T> void requestGet(Context context, @NonNull String path, @NonNull Class<T> tClass, Map<String, String> params, SubscriberListener listener) {
+    public <T> void requestGet(Context context, @NonNull String path, @NonNull Class<T> tClass, Map<String, String> params, SubscriberListener<T> listener) {
         requestGet(context, false, path, tClass, params, listener);
     }
 
-    public <T> void requestGet(Context context, boolean hideLoading, @NonNull String path, @NonNull Class<T> tClass, Map<String, String> params, SubscriberListener listener) {
+    public <T> void requestGet(Context context, boolean hideLoading, @NonNull String path, @NonNull Class<T> tClass, Map<String, String> params, SubscriberListener<T> listener) {
         requestGet(context, hideLoading, false, path, tClass, params, listener);
     }
 
-    public <T> void requestGet(Context context, boolean hideLoading, boolean hideMsg, @NonNull String path, @NonNull Class<T> tClass, Map<String, String> params, SubscriberListener listener) {
+    public <T> void requestGet(Context context, boolean hideLoading, boolean hideMsg, @NonNull String path, @NonNull Class<T> tClass, Map<String, String> params, SubscriberListener<T> listener) {
         request(context, hideLoading, hideMsg, path, true, tClass, params, listener);
     }
 
@@ -94,7 +94,7 @@ public class ApiManager {
     public void putSystemParams(Context context, @NonNull Map<String, String> params) {
     }
 
-    public <T> void request(final Context context, final boolean hideLoading, final String path, final boolean isGet, final Class<T> tClass, Map<String, String> params, SubscriberListener listener) {
+    public <T> void request(final Context context, final boolean hideLoading, final String path, final boolean isGet, final Class<T> tClass, Map<String, String> params, SubscriberListener<T> listener) {
         request(context, hideLoading, false, path, isGet, tClass, params, listener);
     }
 
@@ -111,7 +111,7 @@ public class ApiManager {
      * @param <T>
      */
     public <T> void request(final Context context, final boolean hideLoading, final boolean hideMsg, final String path, final boolean isGet, final Class<T> tClass, Map<String, String> params, final SubscriberListener<T> listener) {
-        Observable observable;
+        Observable<Response<ResponseBody>> observable;
         if (params == null) {
             params = new HashMap<>();
         }
@@ -125,10 +125,10 @@ public class ApiManager {
         doSubscribe(context, hideLoading, hideMsg, observable, tClass, listener);
     }
 
-    public <T> void doSubscribe(Context context, boolean hideLoading, Observable observable, final Class<T> tClass, final SubscriberListener<T> listener) {
+    public <T> void doSubscribe(Context context, boolean hideLoading, Observable<Response<ResponseBody>> observable, final Class<T> tClass, final SubscriberListener<T> listener) {
         doSubscribe(context, hideLoading, false, observable, tClass, listener);
     }
-    public <T> void doSubscribe(Context context, boolean hideLoading, boolean hideMsg, Observable observable, final Class<T> tClass, final SubscriberListener<T> listener) {
+    public <T> void doSubscribe(Context context, boolean hideLoading, boolean hideMsg, Observable<Response<ResponseBody>> observable, final Class<T> tClass, final SubscriberListener<T> listener) {
         ProgressSubscriber<T> subscriber = new ProgressSubscriber<T>(context, hideLoading, hideMsg, listener);
         observable.subscribeOn(Schedulers.io())
                 .map(new ServerResponseFunc<T>())
@@ -226,7 +226,7 @@ public class ApiManager {
      * @param <T>
      */
     public <T> void put(final Context context, final boolean hideLoading, String path, Map<String, String> params, final Class<T> tClass, SubscriberListener<T> listener) {
-        Observable observable;
+        Observable<Response<ResponseBody>> observable;
         observable = getNetAPIInstance().put(path, params);
         doSubscribe(context, hideLoading, observable, tClass, listener);
     }
@@ -239,7 +239,7 @@ public class ApiManager {
      * @param <T>
      */
     public <T> void deleteRestful(final Context context, final boolean hideLoading, String path, String id, final Class<T> tClass, SubscriberListener<T> listener) {
-        Observable observable;
+        Observable<Response<ResponseBody>> observable;
         observable = getNetAPIInstance().delete(path, id);
         doSubscribe(context, hideLoading, observable, tClass, listener);
     }
@@ -252,7 +252,7 @@ public class ApiManager {
      * @param <T>
      */
     public <T> void delete(final Context context, final boolean hideLoading, String path, Map<String, String> params, final Class<T> tClass, SubscriberListener<T> listener) {
-        Observable observable;
+        Observable<Response<ResponseBody>> observable;
         observable = getNetAPIInstance().delete(path, params);
         doSubscribe(context, hideLoading, observable, tClass, listener);
     }
@@ -266,7 +266,7 @@ public class ApiManager {
      * @param <T>
      */
     public <T> void uploadFile(final Context context, final boolean hideLoading, final Class<T> tClass, final Map<String, RequestBody> params, SubscriberListener<T> listener) {
-        Observable observable;
+        Observable<Response<ResponseBody>> observable;
         observable = getNetAPIInstance().uploadFile(params);
         doSubscribe(context, hideLoading, observable, tClass, listener);
     }

@@ -10,7 +10,7 @@ import retrofit2.adapter.rxjava.HttpException;
  * Created by qwy on 17/8/29.
  * 异常处理类
  */
-public class ExceptionEngine {
+class ExceptionEngine {
 
     // 对应HTTP的状态码
     private static final int UNAUTHORIZED = 401;
@@ -22,7 +22,7 @@ public class ExceptionEngine {
     private static final int SERVICE_UNAVAILABLE = 503;
     private static final int GATEWAY_TIMEOUT = 504;
 
-    public static ApiException handleException(Throwable e) {
+    static ApiException handleException(Throwable e) {
         ApiException ex;
         if (e instanceof ServerException){    // 服务器返回的错误
             ServerException resultException = (ServerException) e;

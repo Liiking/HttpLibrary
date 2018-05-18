@@ -14,8 +14,7 @@ public class DefaultInterceptorNetwork implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         try {
-            Response response = chain.proceed(createRequest(chain.request()));
-            return response;
+            return chain.proceed(createRequest(chain.request()));
         } catch (Exception e) {
             e.printStackTrace();
         }
